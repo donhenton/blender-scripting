@@ -17,6 +17,9 @@ eggs/
 .eggs/
 lib/
 frames/
+*.blend1
+tetra_render/
+tetra_video/
 lib64/
 parts/
 sdist/

@@ -2,10 +2,11 @@ import bpy
 import os
 import sys
 
-# Specify the script to be executed
-# scriptFile = "fisher_iris_visualization.py"
-
-scriptFile = "fisher_iris_visualization.py"
+'''
+ Specify the script to be executed
+ scriptFile = "fisher_iris_visualization.py"
+'''
+scriptFile = "tetrahedron_fractal.py"
 
 # Check if script is executed in Blender and get absolute path of current folder
 if bpy.context.space_data is not None:
@@ -22,3 +23,6 @@ os.chdir(cwd)
 # Compile and execute script file
 file = os.path.join(cwd, scriptFile)
 exec(compile(open(file).read(), scriptFile, 'exec'))
+
+
+#importlib.reload(alpha)
