@@ -31,7 +31,11 @@ def trackToConstraint(obj, target):
 
 def target(origin=(0,0,0)):
     tar = bpy.data.objects.new('Target', None)
-    bpy.context.scene.objects.link(tar)
+   # bpy.context.scene.objects.link(tar)
+
+    bpy.context.collection.objects.link(tar)
+    
+    
     tar.location = origin
 
     return tar
@@ -50,7 +54,10 @@ def camera(origin, target=None, lens=35, clip_start=0.1, clip_end=200, type='PER
     # Link object to scene
     obj = bpy.data.objects.new("CameraObj", camera)
     obj.location = origin
-    bpy.context.scene.objects.link(obj)
+   # bpy.context.scene.objects.link(obj)
+    # bpy.context.scene.objects.link(tar)
+    bpy.context.collection.objects.link(obj)
+    
     bpy.context.scene.camera = obj # Make this the current camera
 
     if target: trackToConstraint(obj, target)
@@ -60,7 +67,7 @@ def camera(origin, target=None, lens=35, clip_start=0.1, clip_end=200, type='PER
 def lamp(origin, type='POINT', energy=1, color=(1,1,1), target=None):
     # Lamp types: 'POINT', 'SUN', 'SPOT', 'HEMI', 'AREA'
     print('createLamp called')
-    bpy.ops.object.add(type='LAMP', location=origin)
+    bpy.ops.object.add(type='LIGHT', location=origin)
     obj = bpy.context.object
     obj.data.type = type
     obj.data.energy = energy
@@ -83,8 +90,13 @@ def simpleScene(targetCoord, cameraCoord, sunCoord, lens=35):
 def setAmbientOcclusion(ambient_occulusion=True, samples=5, blend_type='ADD'):
     # blend_type options: 'ADD', 'MULTIPLY'
     bpy.context.scene.world.light_settings.use_ambient_occlusion = ambient_occulusion
-    bpy.context.scene.world.light_settings.ao_blend_type = blend_type
-    bpy.context.scene.world.light_settings.samples = samples
+    
+
+   # bpy.context.scene.world.light_settings.ao_blend_type = blend_type
+    
+    
+    
+    #bpy.context.scene.world.light_settings.samples = samples
 
 
 def setSmooth(obj, level=None, smooth=True):
@@ -119,14 +131,17 @@ def rainbowLights(r=5, n=100, freq=2, energy=0.1):
 
 
 def removeAll(type=None):
-    # Possible type: ‘MESH’, ‘CURVE’, ‘SURFACE’, ‘META’, ‘FONT’, ‘ARMATURE’, ‘LATTICE’, ‘EMPTY’, ‘CAMERA’, ‘LAMP’
+    # Possible type: Â‘MESHÂ’, Â‘CURVEÂ’, Â‘SURFACEÂ’, Â‘METAÂ’, Â‘FONTÂ’, Â‘ARMATUREÂ’, Â‘LATTICEÂ’, Â‘EMPTYÂ’, Â‘CAMERAÂ’, Â‘LAMPÂ’
     if type:
         bpy.ops.object.select_all(action='DESELECT')
         bpy.ops.object.select_by_type(type=type)
         bpy.ops.object.delete()
     else:
         # Remove all elements in scene
-        bpy.ops.object.select_by_layer()
+        
+        bpy.ops.object.select_all(action="SELECT")
+        #change dhh 1
+        #bpy.ops.object.select_by_layer()
         bpy.ops.object.delete(use_global=False)
 
 
@@ -183,24 +198,27 @@ def renderToFolder(renderFolder='rendering', renderName='render', resX=800, resY
     print(bpy.context.space_data)
 
     # Check if script is executed inside Blender
-    if bpy.context.space_data is None:
+  #  if bpy.context.space_data is  None:
         # Specify folder to save rendering and check if it exists
-        render_folder = os.path.join(os.getcwd(), renderFolder)
-        if(not os.path.exists(render_folder)):
-            os.mkdir(render_folder)
+    render_folder = os.path.join(os.getcwd(), renderFolder)
+    print(render_folder)
+    if(not os.path.exists(render_folder)):
+        os.mkdir(render_folder)
 
-        if animation:
-            # Render animation
-            scn.render.filepath = os.path.join(
-                render_folder,
-                renderName)
-            bpy.ops.render.render(animation=True)
-        else:
-            # Render still frame
-            scn.render.filepath = os.path.join(
-                render_folder,
-                renderName + '.png')
-            bpy.ops.render.render(write_still=True)
+    if animation:
+        # Render animation
+        print("animation")
+        scn.render.filepath = os.path.join(
+            render_folder,
+            renderName)
+        bpy.ops.render.render(animation=True)
+    else:
+        # Render still frame
+        print("still")
+        scn.render.filepath = os.path.join(
+            render_folder,
+            renderName + '.png')
+        bpy.ops.render.render(write_still=True)
 
 
 def bmeshToObject(bm, name='Object'):

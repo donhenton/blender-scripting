@@ -3,6 +3,8 @@ import os
 import sys
 
 # Specify the script to be executed
+# scriptFile = "fisher_iris_visualization.py"
+
 scriptFile = "fisher_iris_visualization.py"
 
 # Check if script is executed in Blender and get absolute path of current folder
